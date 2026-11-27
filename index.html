@@ -15,6 +15,7 @@
   </div>
 </section>
 <div id="our-walk" lang="zh-CN" hidden inert>
+  <button type="button" class="sound-toggle" aria-label="声音" aria-pressed="true" hidden><span aria-hidden="true">♪</span></button>
   <header class="mast" hidden><h1><span class="heart" aria-hidden="true">♥</span> 前一排的你</h1><label class="directory">回忆目录 <span aria-hidden="true">⌄</span><select aria-label="选择一段回忆"></select></label></header>
   <div class="world">
     <section class="scene-title" aria-live="polite">
@@ -183,6 +184,19 @@
 #walk-date-feedback{width:100%;min-height:20px;margin:-6px 0 -5px;color:#873752;font-size:13px;font-weight:650}
 #our-walk{color-scheme:light;--night:#292537;--ink:#382d3a;--gold:#ffd8a3;--cream:#fdf0da;background:var(--night);color:var(--cream);font:15px/1.5 "PingFang SC","Microsoft YaHei",sans-serif;text-align:left;overflow:hidden;border-radius:11px}
 #our-walk *{box-sizing:border-box}
+#our-walk{position:relative}
+#our-walk>.sound-toggle{
+ position:absolute;z-index:14;inset:auto auto 10px 10px;display:grid;place-items:center;
+ width:44px;height:44px;padding:0;border:1px solid #f8e5c89e;border-radius:50%;
+ color:#fff1da;background:#342830de;line-height:1;font-size:22px;cursor:pointer;
+}
+#our-walk>.sound-toggle[aria-pressed="false"] span{opacity:.55}
+#our-walk>.sound-toggle[aria-pressed="false"]::after{
+ content:"";position:absolute;width:19px;height:1px;background:currentColor;transform:rotate(-45deg);
+}
+#our-walk>.sound-toggle:focus-visible{outline:2px solid #fff3dd;outline-offset:2px}
+#our-walk:has(.letter-desk[data-letter-open])>.sound-toggle{inset:10px 10px auto auto}
+#our-walk[data-voice-room]>.sound-toggle{inset:10px 10px auto auto}
 #our-walk [hidden]{display:none!important}
 #our-walk h1,#our-walk h2,#our-walk h3,#our-walk p{color:inherit;margin:0}
 #our-walk button,#our-walk select,#our-walk input{font:inherit}
@@ -960,10 +974,14 @@
 #our-walk .world:has(>.voice-room:not([hidden])){touch-action:pan-y}
 </style>
 <script src="walk-media.js?v=letter"></script>
+<script src="walk-audio.js?v=1"></script>
 <script>
 (()=>{
  const gate=document.getElementById('walk-date-gate');
  const story=document.getElementById('our-walk');
+ const musicUrl='';
+ const sound=window.createWalkAudio?.(story.querySelector('.sound-toggle'),musicUrl)??{unlock(){},play(){},setDucked(){}};
+ for(const event of ['pointerup','click','keydown'])story.addEventListener(event,sound.unlock,true);
  const storageKey='our-walk-date-unlocked-v1';
  const form=gate.querySelector('form');
  const feedback=gate.querySelector('#walk-date-feedback');
@@ -1043,7 +1061,7 @@
   fields.forEach(field=>field.removeAttribute('aria-invalid'));
  });
  enterButton.addEventListener('click',()=>{
-  if(dateVerified){reveal(state);return}
+  if(dateVerified){sound.unlock();reveal(state);return}
   const missing=fields.filter(field=>!field.value);
   if(missing.length){
    feedback.textContent='先把年份、月份和日期选齐哦。';
@@ -1057,6 +1075,7 @@
    return;
   }
   dateVerified=true;
+  sound.unlock();
   try{localStorage.setItem(storageKey,'yes')}catch{}
   reveal(window.openai?.widgetState,true);
  });
@@ -2263,6 +2282,7 @@ function syncPhoneTimer(){
  if(view==='paper'||view==='lock'){
   phoneTimer=setTimeout(()=>{
    dailyView=view==='paper'?'lock':'chat';
+   if(dailyView==='lock')sound.play('notification');
    update();save();
   },view==='paper'?4200:1800);
   return;
@@ -2271,6 +2291,7 @@ function syncPhoneTimer(){
  if(!pending)return;
  const delay=1180+Math.min(580,pending.line.length*17);
  phoneTimer=setTimeout(()=>{
+  sound.play('message');
   if(!phoneFirstMessageShown){
    phoneFirstMessageShown=true;update();save();
   }else nextStoryBeat();
@@ -3273,6 +3294,7 @@ function closeVoicePlayer(restoreFocus=false){
 }
 function openVoiceTrack(track,title,trigger){
  if(!voicePlayer.hidden||voiceRoom.inert)return;
+ sound.play(trigger===voiceSecret?'star':'disc');
  const origin=(trigger.querySelector('.shore-disc,.shore-starlight')||trigger).getBoundingClientRect();
  voiceTrigger=trigger;
  voiceTitle.textContent=title;
@@ -3377,6 +3399,7 @@ stars.forEach(([x,y,size],index)=>{
 
 async function putLetterInMailbox(){
  if(!letterReady||letterPage.hidden||roomFlight)return;
+ sound.play('fold');
  const entering=!voiceRoomReady;
  voiceRoomReady=true;
  if(!reduced.matches){
@@ -3827,6 +3850,7 @@ function startLetterCut(){
 }
 async function openBirthdayLetter(){
  if(!letterReady||!letterPage.hidden||roomFlight)return;
+ sound.play('envelope');
  const foldButton=el('.fold-letter');
  foldButton.disabled=true;
  letterDesk.hidden=false;
@@ -3862,7 +3886,7 @@ function nextStoryBeat(){
 }
 function takeScenePhoto(){
  if(!photoCue()||capture)return;
- if(reduced.matches){nextStoryBeat();return}
+ if(reduced.matches){sound.play('shutter');nextStoryBeat();return}
  const kind=current().photoEffect,graduation=kind==='graduation';
  const started=performance.now();
  capture={frame:0,kind,pose:0,step:-1};
@@ -3890,6 +3914,7 @@ function takeScenePhoto(){
    const [,text,taken]=timeline[index];
    counter.textContent=text;
    if(taken){
+    sound.play('shutter');
     for(let i=0;i<taken;i++)exposures[i].dataset.taken='';
     if(taken===1){
      flashAnimation=el('.capture-flash').animate([{opacity:0},{opacity:.6,offset:.14},{opacity:0}],
@@ -3936,6 +3961,11 @@ function urls(key=current().album){
 }
 const stack=el('.photo-stack'), front=el('.photo-sheet.paper');
 const video=front.querySelector('video');
+for(const player of [video,voiceAudio]){
+ for(const event of ['playing','pause','ended','emptied','volumechange']){
+  player.addEventListener(event,()=>sound.setDucked([video,voiceAudio].some(item=>!item.paused&&!item.ended&&!item.muted)));
+ }
+}
 const mixedAlbum=()=>current().album==='everyday';
 const displayedAlbum=()=>collagePreview?{list:[collagePreview.item],sample:collagePreview.sample}:urls();
 const videoItem=item=>typeof item==='object'&&item.type==='video';
@@ -4022,6 +4052,7 @@ img.onerror=()=>{if(!album.hidden&&img.hasAttribute('src')){img.hidden=true;el('
 function turnPhoto(direction,offset=0){
  const {list}=displayedAlbum();
  if(album.hidden||list.length<2)return;
+ sound.play('photo');
  const outgoing=video.hidden&&!videoItem(list[photoIndex])&&!reduced.matches&&typeof front.animate==='function'?front.cloneNode(true):null;
  photoIndex=stackIndex(photoIndex+direction,list.length);
  showPage();if(albumGate())save();
@@ -4139,6 +4170,7 @@ function advanceLine(){
  if(closeMontageEditor)return;
  if(continueLetterCut&&album.hidden){
   const resume=continueLetterCut;
+  sound.play('film');
   continueLetterCut=null;
   updateCues();
   resume();
@@ -4189,7 +4221,7 @@ function discardTouch(){
  if(touch){const id=touch.id;touch=null;release(id)}
 }
 root.onpointerdown=e=>{
- if(!album.hidden||closeMontageEditor||phonePlaying()||!e.isPrimary||e.button!==0||touch||e.target.closest('.directory,.album,.next,.letter-desk,.letter-cut button,.voice-room'))return;
+ if(!album.hidden||closeMontageEditor||phonePlaying()||!e.isPrimary||e.button!==0||touch||e.target.closest('.directory,.album,.next,.letter-desk,.letter-cut button,.voice-room,.sound-toggle'))return;
  touch={id:e.pointerId,x:e.clientX,y:e.clientY,long:false,canRead:phase==='dialogue'&&!jump};
  root.setPointerCapture(e.pointerId);
  holdTimer=setTimeout(()=>{
@@ -4245,6 +4277,7 @@ menu.onchange=()=>{
 el('.close-album').onclick=()=>{
  if(albumGate()&&seenAlbumPhotos.size>=urls().list.length){
   if(current().album==='2026-07-10'){
+   sound.play('photo');
    graduationPhoto=photoIndex;scene=chapterIntro;arrive();
   }else{
    scene++;beat=0;phase='path';photoShown=false;
