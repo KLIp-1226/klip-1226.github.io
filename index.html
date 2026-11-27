@@ -979,7 +979,7 @@
 (()=>{
  const gate=document.getElementById('walk-date-gate');
  const story=document.getElementById('our-walk');
- const musicUrl='';
+ const musicUrl='https://ehdouncjmwktavnmueqa.supabase.co/storage/v1/object/public/memory-walk-media/bgm-2cbed3d8e5d346c1bc9e23da37d6ae22.mp3';
  const sound=window.createWalkAudio?.(story.querySelector('.sound-toggle'),musicUrl)??{unlock(){},play(){},setDucked(){}};
  for(const event of ['pointerup','click','keydown'])story.addEventListener(event,sound.unlock,true);
  const storageKey='our-walk-date-unlocked-v1';
