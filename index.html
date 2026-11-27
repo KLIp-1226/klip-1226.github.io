@@ -3278,7 +3278,18 @@ const voicePlayer=el('.voice-player'),voiceAudio=el('.voice-player-audio');
 const voiceDisc=el('.voice-player-disc'),voiceTitle=el('.voice-player-title');
 const voiceStatus=el('.voice-player-status'),voiceClose=el('.voice-player-close');
 let voiceRoomReady=false,roomFlight=null,discFlight=null,voiceTrigger=null;
-const voiceLibrary=window.walkVoices||{tracks:[],secret:null};
+const voiceStorage='https://ehdouncjmwktavnmueqa.supabase.co/storage/v1/object/public/memory-walk-media/';
+const voiceLibrary=window.walkVoices||{
+ tracks:[
+  ["晨光", "voice-1f136bc8198e2d7997669b1600ace59e.m4a"],
+  ["月色", "voice-9357aa144843e8c1b80f6969a8de3ad3.m4a"],
+  ["靠近", "voice-b432c8be5b9f0b8b15c61ca9f9d8c7ff.m4a"],
+  ["此刻", "voice-52c76567f021603621ad4ee6e09a0217.m4a"],
+  ["想念", "voice-ba702c0400fac9db85a58393b66f848e.m4a"],
+  ["心愿", "voice-c0896912228731319507f8fd48655e78.m4a"]
+ ].map(([title,file])=>({title,src:voiceStorage+file})),
+ secret:null
+};
 
 function closeVoicePlayer(restoreFocus=false){
  const trigger=voiceTrigger;
