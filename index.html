@@ -77,7 +77,7 @@
     <section class="letter-desk full-letter-desk" hidden>
       <header class="cut-stamp"><small>第三篇</small><h2>给你的一封信</h2></header>
       <button class="cut-envelope" data-film-cover type="button" aria-label="打开写给你的信" aria-expanded="false"><i class="cut-envelope-flap" aria-hidden="true"></i><span aria-hidden="true">♥</span><b>给你：</b></button>
-      <article class="letter-page letter-readout" hidden aria-label="给你的一封信"><div class="letter-sheet"><h3>给你的一封信</h3><div class="letter-body"><p>真实照片、视频和完整的信收在私人相册里。</p><a class="private-album-link" href="https://drive.google.com/file/d/1gm0OLeab8jpmPBTOJuQZntOITSt3tfR8/view?usp=sharing" target="_blank" rel="noopener noreferrer">打开私人相册</a></div><button type="button" class="fold-letter">收起信纸</button></div></article>
+      <article class="letter-page letter-readout" hidden aria-label="给你的一封信"><div class="letter-sheet"><h3>给你的一封信</h3><div class="letter-body"><p>完整的信收在私人相册里。</p><a class="private-album-link" href="https://drive.google.com/file/d/1gm0OLeab8jpmPBTOJuQZntOITSt3tfR8/view?usp=sharing" target="_blank" rel="noopener noreferrer">打开私人相册</a></div><button type="button" class="fold-letter">收起信纸</button></div></article>
     </section>
     <section class="voice-room" hidden aria-labelledby="voice-room-title">
       <canvas class="shore-canvas" width="300" height="533" aria-hidden="true"></canvas>
@@ -964,14 +964,43 @@
 #our-walk[data-room-transition] .letter-desk{background:transparent}
 #our-walk .world:has(>.voice-room:not([hidden])){touch-action:pan-y}
 </style>
+<script src="walk-media.js"></script>
 <script>
 (()=>{
  const gate=document.getElementById('walk-date-gate');
  const story=document.getElementById('our-walk');
  const storageKey='our-walk-date-unlocked-v1';
+ const form=gate.querySelector('form');
+ const feedback=gate.querySelector('#walk-date-feedback');
+ const enterButton=form.querySelector('button');
+ const mediaArchiveUrl='https://ehdouncjmwktavnmueqa.supabase.co/storage/v1/object/public/memory-walk-media/memories-47a187aa59944bce980c004d1345c8ac.zip';
  let started=false;
+ let loading=false;
+ let dateVerified=false;
 
- function reveal(state,fromGate=false){
+ async function reveal(state,fromGate=false){
+  if(started||loading)return;
+  loading=true;
+  if(mediaArchiveUrl){
+   enterButton.disabled=true;
+   for(const field of form.querySelectorAll('select'))field.disabled=true;
+   skipButton.hidden=true;
+   feedback.textContent='正在载入照片和视频…';
+   try{
+    await window.loadWalkMedia(mediaArchiveUrl);
+   }catch{
+    feedback.textContent='暂时载入不了照片和视频。';
+    enterButton.disabled=false;
+    enterButton.textContent='重试';
+    skipButton.hidden=false;
+    loading=false;
+    return;
+   }
+  }
+  showStory(state,fromGate);
+ }
+
+ function showStory(state,fromGate){
   if(started)return;
   started=true;
   gate.hidden=true;
@@ -984,13 +1013,13 @@
  }
 
  const state=window.openai?.widgetState;
- if(wasUnlocked()||state?.privateContent?.dateUnlocked===true){
-  reveal(state);
-  return;
- }
+ const skipButton=document.createElement('button');
+ skipButton.type='button';
+ skipButton.textContent='先看故事';
+ skipButton.hidden=true;
+ skipButton.onclick=()=>showStory(state,false);
+ form.append(skipButton);
 
- const form=gate.querySelector('form');
- const feedback=gate.querySelector('#walk-date-feedback');
  const {year,month,day}=form.elements;
  const fields=[year,month,day];
  for(let value=2020;value<=2030;value++)year.add(new Option(value,value));
@@ -1008,7 +1037,8 @@
   feedback.textContent='';
   fields.forEach(field=>field.removeAttribute('aria-invalid'));
  });
- gate.querySelector('button').addEventListener('click',()=>{
+ enterButton.addEventListener('click',()=>{
+  if(dateVerified){reveal(state);return}
   const missing=fields.filter(field=>!field.value);
   if(missing.length){
    feedback.textContent='先把年份、月份和日期选齐哦。';
@@ -1021,9 +1051,13 @@
    fields.forEach(field=>field.setAttribute('aria-invalid','true'));
    return;
   }
+  dateVerified=true;
   try{localStorage.setItem(storageKey,'yes')}catch{}
   reveal(window.openai?.widgetState,true);
  });
+ dateVerified=wasUnlocked()||state?.privateContent?.dateUnlocked===true;
+ if(dateVerified)reveal(state);
+
  window.addEventListener('openai:set_globals',event=>{
   const restored=event.detail?.globals?.widgetState;
   if(restored?.privateContent?.dateUnlocked===true)reveal(restored);
@@ -2257,7 +2291,8 @@ function renderKeepsake(){
  keepsake.dataset.kind=kind;keepsake.dataset.view=view;
  if(view==='paper'){
   const list=urls('2026-07-10').list;
-  const source=list[graduationPhoto]||list[0];
+  const original=list[graduationPhoto]||list[0];
+  const source=original&&walkMediaUrl(original);
   const print=el('.keepsake-photo');
   if(source&&print.getAttribute('src')!==source)print.src=source;
   print.hidden=!source;
@@ -2545,7 +2580,7 @@ function arrangeFilmCut({layer,montage,bridge,sampleBadge,envelope,seal,chapter,
   const fullBleed=add(montage,'div','cut-full-bleed cut-montage-backdrop');
   if(backdrop){
     const image=add(fullBleed,'img','');
-    image.alt='';image.src=backdrop;
+    image.alt='';image.src=walkMediaUrl(backdrop);
   }
   const scatter=[
     [9,10,53,32,-23], [74,5,73,32,16], [30,30,57,33,12],
@@ -2803,7 +2838,7 @@ function playLetterCut(layer,items,variant,options={}){
       card.hidden=true;
     }
     if(typeof item==='string'){
-      const image=add(card,'img','');image.alt='';image.src=item;
+      const image=add(card,'img','');image.alt='';image.src=walkMediaUrl(item);
     }else if(item){
       const clip=add(card,'video','');
       clip.defaultMuted=true;
@@ -2811,7 +2846,7 @@ function playLetterCut(layer,items,variant,options={}){
       clip.playsInline=true;
       clip.loop=true;
       clip.preload='auto';
-      clip.src=item.src;
+      clip.src=walkMediaUrl(item.src);
       clip.setAttribute('aria-hidden','true');
       cleanups.push(()=>clip.pause());
     }
@@ -3423,7 +3458,7 @@ function openMontageEditor({host, entries, backdrop, onSave, onCancel}){
  if(backdrop){
   const image=document.createElement('img');
   image.className='montage-board-backdrop';
-  image.alt='';image.src=backdrop;
+  image.alt='';image.src=walkMediaUrl(backdrop);
   board.append(image);
  }
  const strip=overlay.querySelector('.montage-order');
@@ -3453,7 +3488,7 @@ function openMontageEditor({host, entries, backdrop, onSave, onCancel}){
     if(Number.isFinite(preview.duration))preview.currentTime=Math.min(.1,preview.duration/2);
    },{once:true});
   }else preview.alt='';
-  preview.src=video?entry.item.src:entry.item;
+  preview.src=walkMediaUrl(video?entry.item.src:entry.item);
   return preview;
  }
 
@@ -3900,6 +3935,7 @@ const mixedAlbum=()=>current().album==='everyday';
 const displayedAlbum=()=>collagePreview?{list:[collagePreview.item],sample:collagePreview.sample}:urls();
 const videoItem=item=>typeof item==='object'&&item.type==='video';
 const sourceOf=item=>typeof item==='string'?item:item.src;
+const walkMediaUrl=path=>window.walkMediaSources?.get(path)||path;
 function stopVideo(){
  video.pause();video.hidden=true;
  if(video.hasAttribute('src')){video.removeAttribute('src');video.load()}
@@ -3917,7 +3953,7 @@ function setBehind(list,direction){
   sheet.toggleAttribute('data-clip',videoItem(src));
   preview.hidden=videoItem(src);
   if(preview.hidden)preview.removeAttribute('src');
-  else if(preview.getAttribute('src')!==sourceOf(src))preview.src=sourceOf(src);
+  else if(preview.getAttribute('src')!==walkMediaUrl(sourceOf(src)))preview.src=walkMediaUrl(sourceOf(src));
  });
 }
 function resetDrag(){
@@ -3960,9 +3996,9 @@ function showPage(){
  img.hidden=!list.length||clip;
  img.alt=(sample?'AI 示意照片 · ':'')+title+'，第 '+((collagePreview?.index??photoIndex)+1)+' 张';
  stopVideo();
- if(clip){video.hidden=false;video.src=item.src}
+ if(clip){video.hidden=false;video.src=walkMediaUrl(item.src)}
  if(item&&!clip){
-  const source=sourceOf(item);
+  const source=walkMediaUrl(sourceOf(item));
   if(img.getAttribute('src')!==source)img.src=source;
   else updateAlbumRatio(img.naturalWidth,img.naturalHeight);
  }else img.removeAttribute('src');
