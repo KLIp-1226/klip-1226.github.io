@@ -77,7 +77,7 @@
     <div class="letter-cut" aria-hidden="true" inert hidden></div>
     <section class="letter-desk full-letter-desk" hidden>
       <header class="cut-stamp"><small>第三篇</small><h2>给你的一封信</h2></header>
-      <button class="cut-envelope" data-film-cover type="button" aria-label="打开写给你的信" aria-expanded="false"><i class="cut-envelope-flap" aria-hidden="true"></i><span aria-hidden="true">♥</span><b>给你：</b></button>
+      <button class="cut-envelope" data-film-cover type="button" aria-label="打开写给你的信" aria-expanded="false"><i class="cut-envelope-flap" aria-hidden="true"></i><span aria-hidden="true">♥</span><b>给你：</b><i class="cut-postage" aria-hidden="true" hidden><img alt=""></i></button>
       <article class="letter-page letter-readout" hidden aria-label="给你的一封信"><div class="letter-sheet"><h3>给你的一封信</h3><div class="letter-body"><p>这封信暂时打不开。</p></div><button type="button" class="fold-letter">收起信纸</button></div></article>
     </section>
     <section class="voice-room" hidden aria-labelledby="voice-room-title">
@@ -465,14 +465,8 @@
 .letter-cut[data-cut="film"] .cut-today{
   inset:4% 6% auto;grid-auto-flow:column;justify-content:center;align-items:baseline;gap:8px;
 }
-.cut-seal-spark{
-  position:absolute;z-index:5;left:50%;top:59%;width:5px;height:5px;
-  background:currentColor;box-shadow:0 0 6px currentColor;font:normal bold 14px/1 sans-serif;
-}
-.cut-seal-spark:not(:empty){width:auto;height:auto;background:none;box-shadow:none;text-shadow:0 0 6px currentColor}
 .letter-cut[data-cut="film"] .cut-today strong{font-size:clamp(16px,5cqw,20px)}
 .letter-cut[data-cut="film"] .cut-bridge{display:block;perspective:none;z-index:2}
-.letter-cut[data-cut="film"] .cut-film{position:absolute;inset:0;z-index:5;width:100%;height:100%;image-rendering:auto}
 .cut-envelope-flap{
   position:absolute;inset:0 0 auto;height:62%;z-index:0;
   transform-origin:center top;clip-path:polygon(0 0,100% 0,50% 96%);
@@ -712,10 +706,10 @@
 #our-walk .media-nav,#our-walk[data-album="open"] .media-nav button{color:#ffedda}
 #our-walk[data-collage-preview] .album{z-index:7}
 #our-walk[data-collage-preview] .letter-cut::after{
-  content:"";position:absolute;inset:0;z-index:3;background:#2b223642;
+  content:"";position:absolute;inset:0;z-index:3;background:#251d2b;
 }
 #our-walk button.cut-print{color:inherit;pointer-events:auto;touch-action:manipulation;cursor:pointer}
-#our-walk .cut-main-print[data-layer="underlay"]{z-index:1;pointer-events:none}
+#our-walk .cut-main-print[data-layer="underlay"]{z-index:1}
 #our-walk .cut-main-print[data-layer="featured"]{z-index:3}
 #our-walk .cut-main-print[data-layer="video-back"]{z-index:2}
 #our-walk .cut-main-print[data-layer="video-front"]{z-index:4}
@@ -970,6 +964,61 @@
 }
 #our-walk[data-voice-room] .letter-desk{z-index:4}
 #our-walk[data-voice-room] .letter-desk :is(.cut-envelope,.cut-stamp){visibility:hidden}
+#our-walk[data-letter="playing"] .world:has(.letter-cut[data-album-entrance]) .scene-title{visibility:visible}
+.letter-cut[data-cut="film"]{background:transparent;overflow:clip}
+.letter-cut[data-cut="film"] :is(.cut-montage,.cut-bridge){z-index:auto}
+.letter-cut[data-cut="film"] .cut-montage-backdrop img{filter:brightness(.87)}
+.cut-album-scrim{position:absolute;inset:0;background:#2c1b323d;z-index:-1}
+.cut-album-phone{
+  position:absolute;z-index:6;top:54%;left:50%;width:47.2%;height:47.2%;
+  transform:translate(-50%,-50%);box-sizing:border-box;padding:1.5cqw;
+  border:1px solid #bb889b;border-radius:6.1cqw;background:#382838;
+  box-shadow:0 3cqw 6cqw #24162676,inset 0 0 0 1px #bb889b;
+}
+.cut-album-phone::before,.cut-album-phone::after{
+  content:"";position:absolute;z-index:1;left:50%;transform:translateX(-50%);border-radius:2cqw;
+}
+.cut-album-phone::before{top:1.2cqw;width:15cqw;height:3.1cqw;background:#382838}
+.cut-album-phone::after{bottom:2.3cqw;width:13.9cqw;height:.75cqw;background:#6e536c}
+.cut-album-screen{
+  height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr);
+  padding:6.6cqw 2cqw 4cqw;gap:2cqw;border-radius:4.7cqw;
+  background:linear-gradient(#f2d8de 23%,#fae9e6 23%);color:#573749;
+}
+.cut-album-screen strong{font:500 clamp(14px,5cqw,24px)/1.1 "Songti SC",serif}
+.cut-album-thumbs{display:grid;grid-template:repeat(4,minmax(0,1fr))/repeat(3,minmax(0,1fr));gap:1.05cqw}
+.cut-album-thumbs div{overflow:hidden;border-radius:.8cqw;background:#dcc4cb}
+.cut-album-thumbs :is(img,video){display:block;width:100%;height:100%;object-fit:cover;opacity:.76}
+#our-walk .full-letter-desk,#our-walk .letter-cut[data-cut="film"] .letter-cover-background{
+  background:
+    repeating-linear-gradient(transparent 0 3.75%,#ad557436 3.75% 3.91%),
+    linear-gradient(90deg,transparent 8.2%,#b16b8850 8.2% calc(8.2% + 1px),transparent calc(8.2% + 1px)),
+    linear-gradient(146deg,#fff0dc 0%,#f2c7cb 58%,#cd8da8 100%);
+}
+#our-walk :is(.full-letter-desk,.letter-cut[data-cut="film"]) .cut-stamp{
+  inset:23% 6% auto;color:#6b384d;text-shadow:none;
+}
+#our-walk .cut-envelope[data-film-cover]{
+  width:71%;left:14.5%;top:55.5%;transform:translateY(-50%);
+}
+#our-walk [data-letter-open]>.cut-envelope[data-film-cover]{transform:translateY(-27%) scale(1.06)}
+.cut-postage{
+  position:absolute;z-index:2;right:4.6%;top:6%;width:11.4%;aspect-ratio:29/36;
+  box-sizing:border-box;padding:1.15%;background:#fff7e8;
+  border:1px dashed #e6bcaa;box-shadow:1px 2px 3px #47283b46;
+}
+.cut-postage img{display:block;width:100%;height:100%;object-fit:cover}
+#our-walk[data-album="open"][data-collage-preview] .album{
+  inset:0 0 auto;width:auto;height:100%;max-height:100dvh;box-sizing:border-box;padding:8px 9px 11px;display:grid;
+  grid-template-rows:44px minmax(0,1fr);justify-content:stretch;align-items:stretch;
+  gap:6px;background:#251d2b;animation:none;
+}
+#our-walk[data-collage-preview] .album .photo-stack{width:100%;height:100%;aspect-ratio:auto}
+#our-walk[data-collage-preview] .album .film{grid-row:1;justify-self:end}
+#our-walk[data-album="open"][data-collage-preview] .film .close-album{
+  width:44px;min-width:44px;height:44px;padding:0;border-radius:50%;
+  color:#fff6e7;background:#503447;border:1px solid #9c7183;font:500 24px/1 system-ui,sans-serif;
+}
 #our-walk[data-room-transition] .letter-desk{background:transparent}
 #our-walk .world:has(>.voice-room:not([hidden])){touch-action:pan-y}
 </style>
@@ -2417,358 +2466,149 @@ function weather(){
   weatherTimer=setTimeout(()=>{paint();weather()},moving?34:135);
  }
 }
-function drawContinuousFilm(canvas,photos,timing){
-  const {appear,spreadStart,spreadEnd,firstFlight,flightTime,gap}=timing;
-  const ctx=canvas.getContext('2d');
-  if(!ctx)return ()=>{};
-  const frameSize=176,filmHeight=86;
-  const clamp=(value,min=0,max=1)=>Math.min(max,Math.max(min,value));
-  const smooth=value=>{const t=clamp(value);return t*t*(3-2*t)};
-  const colors=[
-    {edge:'#e78ba5',light:'#ffe8d0',dark:'#984d68'},
-    {edge:'#ffe2b5',light:'#fff7e4',dark:'#c07d70'},
-    {edge:'#f5b6c6',light:'#fff2db',dark:'#ad6685'}
-  ];
-  // The ribbon paths briefly intersect before opening into three distinct rows.
-  const paths=[
-    [[-.07,.26],[.17,.19],[.45,.17],[.72,.23],[.77,.33],[.65,.39],[.39,.36],[.32,.30],[.49,.28],[.69,.36],[.69,.42]],
-    [[1.04,.19],[.86,.23],[.62,.28],[.39,.42],[.19,.43],[.13,.37],[.25,.29],[.47,.32],[.57,.39],[.47,.46]],
-    [[-.03,.46],[.17,.53],[.40,.50],[.65,.42],[.83,.35],[.95,.38],[.94,.47],[.76,.52],[.57,.48],[.46,.44]]
-  ];
-  const separatedPaths=[
-    [[.10,.175],[.18,.160],[.26,.152],[.34,.155],[.42,.174],[.50,.199],[.58,.216],[.66,.212],[.74,.193],[.83,.168],[.91,.164]],
-    [[.90,.310],[.82,.294],[.74,.293],[.66,.308],[.58,.332],[.50,.344],[.42,.338],[.34,.320],[.26,.301],[.17,.300],[.09,.321]],
-    [[.10,.454],[.19,.459],[.28,.465],[.37,.458],[.46,.437],[.55,.416],[.64,.412],[.73,.425],[.81,.444],[.88,.449],[.92,.436]]
-  ];
-  function makeTexture(lane){
-    const frames=photos.filter((_,index)=>index%3===lane);
-    const textureWidth=frameSize*Math.max(1,frames.length);
-    const texture=document.createElement('canvas');
-    texture.width=textureWidth;
-    texture.height=filmHeight;
-    const paint=texture.getContext('2d');
-    const {edge,light,dark}=colors[lane];
-    function update(){
-      paint.fillStyle=edge;
-      paint.fillRect(0,0,textureWidth,filmHeight);
-      for(const [frame,image] of frames.entries()){
-        const x=frame*frameSize;
-        const video=image instanceof HTMLVideoElement;
-        const width=video?image.videoWidth:image.naturalWidth;
-        const height=video?image.videoHeight:image.naturalHeight;
-        if(width&&height&&(!video||image.readyState>=2)){
-          const scale=Math.max((frameSize-3)/width,68/height);
-          const cropWidth=(frameSize-3)/scale,cropHeight=68/scale;
-          paint.drawImage(image,(width-cropWidth)/2,(height-cropHeight)/2,
-            cropWidth,cropHeight,x+1,9,frameSize-3,68);
-        }else{
-          paint.fillStyle=dark;
-          paint.fillRect(x+1,9,frameSize-3,68);
-        }
-      }
-      paint.fillStyle=light;
-      paint.fillRect(0,0,textureWidth,2);
-      paint.fillRect(0,filmHeight-2,textureWidth,2);
-      for(let x=5;x<textureWidth-6;x+=13){
-        paint.fillRect(x,3,6,4);
-        paint.fillRect(x,filmHeight-7,6,4);
-      }
-    }
-    update();
-    return {texture,update};
-  }
-  const textures=paths.map((_,lane)=>makeTexture(lane));
-  for(const [index,image] of photos.entries()){
-    const video=image instanceof HTMLVideoElement;
-    if(video?image.readyState<2:!image.complete){
-      image.addEventListener(video?'loadeddata':'load',textures[index%3].update,{once:true});
-    }
-  }
-
-  function spline(points,index,t,axis){
-    const a=points[Math.max(0,index-1)][axis],b=points[index][axis];
-    const c=points[index+1][axis],d=points[Math.min(points.length-1,index+2)][axis];
-    return .5*(2*b+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);
-  }
-  function buildPath(lane,width,height,time,spread,pulling){
-    const sway=1-spread;
-    const base=paths[lane].map(([x,y],i)=>{
-      const [restX,restY]=separatedPaths[lane][i];
-      return [
-        (x+(restX-x)*spread+Math.sin(time*.002+i*.74+lane)*.022*sway)*width,
-        (y+(restY-y)*spread+Math.cos(time*.0024+i*.71+lane)*.014*sway)*height
-      ];
-    });
-    if(pulling>0){
-      // The leading end rounds the outer edge before slipping into the centre.
-      const turnX=lane===1?.10:.87;
-      const entryX=lane===1?.28:.70;
-      const reach=smooth(pulling/.23);
-      const head=base.at(-1);
-      for(const [x,y] of [[turnX,.46],[entryX,.491],[.50,.521],[.50,.552]]){
-        base.push([head[0]+(x*width-head[0])*reach,head[1]+(y*height-head[1])*reach]);
-      }
-    }
-    const points=[{x:base[0][0],y:base[0][1],length:0}];
-    let length=0,bodyLength=0;
-    for(let i=0;i<base.length-1;i++){
-      for(let part=1;part<=10;part++){
-        const t=part/10,x=spline(base,i,t,0),y=spline(base,i,t,1);
-        const previous=points.at(-1);
-        length+=Math.hypot(x-previous.x,y-previous.y);
-        points.push({x,y,length});
-      }
-      if(i===paths[lane].length-2)bodyLength=length;
-    }
-    return {points,length,bodyLength};
-  }
-  function paintStrip(lane,width,height,time,activeLane){
-    const shown=smooth((time-appear-lane*190)/460);
-    const spread=smooth((time-spreadStart)/ (spreadEnd-spreadStart));
-    const pulling=clamp((time-firstFlight-lane*gap)/flightTime);
-    if(shown<=0||pulling>=1)return;
-    const route=buildPath(lane,width,height,time,spread,pulling);
-    const travel=route.length*smooth(pulling);
-    const attention=activeLane===lane?1:.78;
-    const visible=Math.min(route.bodyLength,route.length-travel);
-    if(visible<1)return;
-    const segments=Math.ceil(visible/(width*.010));
-    let cursor=1;
-    const sampleAt=distance=>{
-      while(cursor<route.points.length-1&&route.points[cursor].length<distance)cursor++;
-      const a=route.points[cursor-1],b=route.points[cursor];
-      const span=b.length-a.length;
-      const fraction=clamp((distance-a.length)/(span||1));
-      const x=a.x+(b.x-a.x)*fraction,y=a.y+(b.y-a.y)*fraction;
-      const taper=pulling>0?smooth((distance-route.bodyLength)/(route.length-route.bodyLength||1)):0;
-      const twist=.9+.1*Math.cos(distance/width*5.4-time*.002*(1-spread)+lane);
-      const band=width*(.162-spread*.022)*twist*(1-taper*.77);
-      return {x,y,band};
-    };
-    let previous=sampleAt(travel);
-    const texture=textures[lane].texture;
-    const textureWidth=texture.width;
-    ctx.save();
-    ctx.globalAlpha=shown*(activeLane<0?1:attention);
-    if(pulling>0){
-      ctx.beginPath();
-      ctx.rect(0,0,width,.534*height);
-      ctx.clip();
-    }
-    // Slice one continuous texture along the curve. Small overlaps keep the photo and its sprocket edges joined.
-    for(let i=1;i<=segments;i++){
-      const next=sampleAt(travel+visible*i/segments);
-      const dx=next.x-previous.x,dy=next.y-previous.y;
-      const span=Math.hypot(dx,dy);
-      const inner=(previous.band+next.band)/2;
-      const a=textureWidth*visible*(i-1)/(segments*route.bodyLength);
-      const b=textureWidth*visible*i/(segments*route.bodyLength);
-      if(span>.01&&b>a){
-        ctx.save();
-        ctx.transform(dx/span,dy/span,-dy/span,dx/span,previous.x,previous.y);
-        ctx.drawImage(texture,a,0,b-a,filmHeight,-1,-inner/2,span+2,inner);
-        ctx.restore();
-      }
-      previous=next;
-    }
-    ctx.restore();
-  }
-  let frame=0;
-  const started=performance.now();
-  function paint(now){
-    if(!canvas.isConnected)return;
-    const width=canvas.clientWidth,height=canvas.clientHeight;
-    const ratio=Math.min(window.devicePixelRatio||1,1.5);
-    const bitmapWidth=Math.round(width*ratio),bitmapHeight=Math.round(height*ratio);
-    if(canvas.width!==bitmapWidth||canvas.height!==bitmapHeight){canvas.width=bitmapWidth;canvas.height=bitmapHeight}
-    ctx.setTransform(ratio,0,0,ratio,0,0);
-    ctx.clearRect(0,0,width,height);
-    if(width&&height){
-      const time=now-started;
-      const slot=Math.floor((time-firstFlight)/gap);
-      const activeLane=slot>=0&&slot<3&&time<firstFlight+slot*gap+flightTime?slot:-1;
-      for(const lane of [1,0,2]){
-        if(lane!==activeLane)paintStrip(lane,width,height,time,activeLane);
-      }
-      if(activeLane>=0)paintStrip(activeLane,width,height,time,activeLane);
-    }
-    if(now-started<firstFlight+2*gap+flightTime+60)frame=requestAnimationFrame(paint);
-  }
-  frame=requestAnimationFrame(paint);
-  return ()=>cancelAnimationFrame(frame);
+function setCoverPostage(cover,photo){
+  const stamp=cover.querySelector('.cut-postage');
+  if(!stamp)return null;
+  stamp.hidden=!photo;
+  if(photo)stamp.querySelector('img').src=walkMediaUrl(photo);
+  return stamp;
 }
 
-function arrangeFilmCut({layer,montage,bridge,sampleBadge,envelope,seal,chapter,today,opening,cards,slides,print,add,run,at,cleanups,onToday,onCollageReady,finish,reduced,poses,editButton,backdrop}){
-  const interval=850;
-  const firstPrint=250;
-  const landing=740;
-  const snapshots=slides.filter(item=>typeof item==='string');
-  const fullBleed=add(montage,'div','cut-full-bleed cut-montage-backdrop');
-  if(backdrop){
-    const image=add(fullBleed,'img','');
-    image.alt='';image.src=walkMediaUrl(backdrop);
-  }
+function arrangeFilmCut({layer,montage,bridge,sampleBadge,envelope,seal,chapter,today,opening,cards,slides,add,run,at,cleanups,onToday,onCollageReady,finish,reduced,poses,editButton,backdrop}){
+  const firstPrint=2330,interval=480,landing=690;
+  const ease=value=>{const t=Math.max(0,Math.min(1,value));return t*t*(3-2*t)};
+  const range=(time,start,end)=>ease((time-start)/(end-start));
+  const between=(from,to,t)=>from+(to-from)*t;
   const scatter=[
     [9,10,53,32,-23], [74,5,73,32,16], [30,30,57,33,12],
     [87,40,52,38,-17], [14,62,53,34,-16], [66,79,66,36,14],
     [11,97,56,34,21], [93,99,49,35,-12], [51,49,56,36,-7],
     [46,8,48,27,-15], [93,61,45,32,-12], [38,79,44,31,11]
   ];
-  const origins=[[-22,2],[124,-8],[-20,40],[120,26],[3,125],[85,119],[119,115],[-22,96],[51,-27]];
-  const atPhoto=(x,y,width,height,rotation,scale=1)=>({
-    left:x+'%',top:y+'%',width:width+'%',height:height+'%',
-    transform:'translate(-50%,-50%) rotate('+rotation+'deg) scale('+scale+')'
+  const atPhoto=([x,y,w,h,angle],scale=1,offsetY=0)=>({
+    left:x+'%',top:y+'%',width:w+'%',height:h+'%',
+    transform:'translate(-50%,calc(-50% + '+offsetY+'cqw)) rotate('+angle+'deg) scale('+scale+')'
   });
-  function fling(card,pose,index,start){
-    const [x,y,w,h,angle]=pose;
-    const [fromX,fromY]=origins[index%origins.length];
-    if(reduced){Object.assign(card.style,atPhoto(x,y,w,h,angle));card.hidden=false;return}
-    run(card,[
-      {...atPhoto(fromX,fromY,w,h,angle*2.4,.68),opacity:0},
-      {...atPhoto(x,y,w,h,angle,1.045),opacity:1,offset:.72},
-      {...atPhoto(x,y,w,h,angle),opacity:1}
-    ],landing,start,'cubic-bezier(.18,.65,.24,1)');
-  }
-  if(!reduced&&!backdrop)run(fullBleed,[
-    {opacity:0,transform:'scale(1.25) rotate(-5deg)'},
-    {opacity:1,transform:'scale(1.25) rotate(-5deg)'}
-  ],900,firstPrint+landing);
-  today.style.opacity='0';
-  bridge.style.visibility='hidden';
+  const fullBleed=add(montage,'div','cut-print cut-full-bleed cut-montage-backdrop');
+  if(backdrop){const image=add(fullBleed,'img','');image.alt='';image.src=walkMediaUrl(backdrop)}
+  today.hidden=opening.hidden=true;
+  montage.inert=true;
+  bridge.hidden=true;
 
-  const edges=[
-    [4,18,42,28,13],[94,16,42,30,-31],[45,5,52,26,8],
-    [2,47,36,35,19],[91,50,42,33,18],[7,80,42,33,-25],
-    [97,77,37,30,-20],[50,100,58,26,-19]
-  ];
-  const backgroundItems=snapshots.length?snapshots:slides;
-  const sparePrints=backgroundItems.length&&!cards.some(card=>card.matches('button'))?edges.map((pose,index)=>{
-    const card=print(montage,backgroundItems[index%backgroundItems.length]);
-    card.classList.add('cut-edge-print');
-    fling(card,pose,index,180+index*125);
-    return {card,pose};
-  }):[];
+  if(!reduced){
+    layer.dataset.albumEntrance='';
+    const scrim=add(montage,'div','cut-album-scrim');
+    const phone=add(montage,'div','cut-album-phone');
+    phone.setAttribute('aria-hidden','true');
+    const screen=add(phone,'div','cut-album-screen');
+    add(screen,'strong','','相册');
+    const thumbs=add(screen,'div','cut-album-thumbs');
+    for(const item of slides.slice(0,12)){
+      const thumb=add(thumbs,'div','');
+      const media=add(thumb,typeof item==='string'?'img':'video','');
+      if(typeof item==='string')media.alt='';
+      else{media.muted=true;media.playsInline=true;media.preload='auto'}
+      media.src=walkMediaUrl(typeof item==='string'?item:item.src);
+    }
+    run(scrim,[{opacity:0},{opacity:1}],910,530);
+    run(phone,[
+      {transform:'translate(-50%,110%) rotate(-9deg)'},
+      {transform:'translate(-50%,-50%) rotate(-1.4deg)'}
+    ],840,440,'cubic-bezier(.22,.64,.27,1)');
+    run(screen,[{opacity:0},{opacity:1}],510,1220);
+    run(thumbs,[{opacity:0},{opacity:1}],420,1450);
+    run(phone,[
+      {transform:'translate(-50%,-50%) rotate(-1.4deg) scale(1)',opacity:1},
+      {transform:'translate(-50%,-55%) rotate(-.6deg) scale(1.075)',opacity:1,offset:.42},
+      {transform:'translate(-50%,-57%) rotate(0) scale(1.19)',opacity:0}
+    ],710,1990,'ease-in-out','forwards');
+    run(fullBleed,[{opacity:0},{opacity:1}],1630,firstPrint-80,'ease-in-out');
+    at(()=>{delete layer.dataset.albumEntrance;phone.remove();scrim.remove()},2700);
+    cleanups.push(()=>delete layer.dataset.albumEntrance);
+  }
+
   const cardPoses=cards.map((card,index)=>{
     card.classList.add('cut-main-print');
-    const slot=cards.length<9&&index===cards.length-1?8:index;
-    const pose=poses?.[index]||scatter[slot];
-    const start=firstPrint+index*interval;
-    fling(card,pose,index,start);
-    const revealCard=()=>{
+    const pose=poses?.[index]||scatter[index%scatter.length];
+    Object.assign(card.style,atPhoto(pose));
+    const reveal=()=>{
       card.hidden=false;
       const clip=card.querySelector('video');
       if(clip){clip.autoplay=true;clip.play().catch(()=>{})}
     };
-    if(reduced)revealCard();
-    else at(revealCard,start);
+    if(reduced)reveal();
+    else{
+      const start=firstPrint+index*interval;
+      run(card,[
+        {...atPhoto(pose,.59,4.2),opacity:0},
+        {...atPhoto(pose,1.055),opacity:1,offset:.56,easing:'ease-in-out'},
+        {...atPhoto(pose),opacity:1}
+      ],landing,start,'cubic-bezier(.21,.65,.29,1)');
+      at(reveal,start);
+    }
     return pose;
   });
-  if(!reduced)run(opening,[{opacity:1},{opacity:0}],380,1100);
-  else opening.hidden=true;
 
   function moveIntoEnvelope(){
     layer.inert=true;
     layer.setAttribute('aria-hidden','true');
     if(editButton)editButton.hidden=true;
-    bridge.style.visibility='';
-    if(reduced){
-      montage.replaceChildren(today);
-      today.style.opacity='1';
-      bridge.hidden=true;
-      onToday();
-      at(finish,900);
-      return;
-    }
-
-    const align=620;
-    const assembleTime=1120;
-    at(()=>montage.querySelectorAll('video').forEach(clip=>clip.pause()),align+assembleTime+320);
-    const appear=align+assembleTime-500;
-    const spreadStart=appear+850;
-    const spreadEnd=spreadStart+1150;
-    const firstFlight=spreadEnd+470;
-    const flightTime=1810;
-    const gap=flightTime+240;
-    const flapTime=firstFlight+2*gap+flightTime+110;
-    run(today,[{opacity:0},{opacity:1,offset:.24},{opacity:1,offset:.68},{opacity:0}],1300,0);
-    at(onToday,align+360);
-
-    run(fullBleed,[
-      {opacity:1,transform:backdrop?'scale(1)':'scale(1.25) rotate(-5deg)'},
-      {opacity:.87,transform:'scale(1.15) rotate(0)'}
-    ],1150,align,'ease-in-out','forwards');
-    run(fullBleed,[{opacity:.87},{opacity:0}],880,spreadStart+230,'ease-in-out','forwards');
-    sparePrints.forEach(({card,pose},index)=>{
-      const [x,y,w,h,angle]=pose;
-      run(card,[
-        {...atPhoto(x,y,w,h,angle),opacity:1},
-        {...atPhoto(50,44,w,h,angle+(index%2?63:-63),.15),opacity:0}
-      ],970,align+index*28,'cubic-bezier(.56,.06,.43,1)','forwards');
-    });
+    const stampIndex=slides.findLastIndex(item=>typeof item==='string');
+    const stamp=setCoverPostage(envelope,slides[stampIndex]);
+    if(reduced){onToday();finish();return}
+    bridge.hidden=false;
+    const paper=add(bridge,'div','letter-cover-background');
+    run(paper,[{opacity:0},{opacity:1}],3520,770,'ease-in-out');
+    run(envelope,[{top:'106%'},{top:'55.5%'}],1970,1250,'cubic-bezier(.33,0,.67,1)');
+    run(envelope,[{opacity:0},{opacity:1}],1200,1410);
+    const flap=envelope.querySelector('.cut-envelope-flap');
+    if(flap)run(flap,[{transform:'rotateX(180deg)'},{transform:'rotateX(0)'}],1320,2400,'ease-in-out');
+    run(seal,[
+      {opacity:0,transform:'translate(-50%,-50%) scale(.65)'},
+      {opacity:1,transform:'translate(-50%,-50%) scale(1.12)',offset:.68},
+      {opacity:1,transform:'translate(-50%,-50%) scale(1)'}
+    ],540,3890);
+    if(stamp)run(stamp,[
+      {opacity:0,transform:'scale(.88)'},{opacity:1,transform:'scale(1.12)',offset:.72},
+      {opacity:1,transform:'scale(1)'}
+    ],300,3750);
+    run(chapter,[{opacity:0},{opacity:1}],700,3930);
+    if(sampleBadge)run(sampleBadge,[{opacity:1},{opacity:0}],300,380);
 
     cards.forEach((card,index)=>{
-      const [x,y,w,h,rotation]=cardPoses[index];
-      const lane=index%3;
-      const toX=50+(x-50)*.46,toY=28+(y-50)*.27+lane*4;
-      run(card,[
-        {...atPhoto(x,y,w,h,rotation),opacity:1},
-        {...atPhoto(toX,toY,w,h,rotation+(lane-1)*37,.54),opacity:.88,offset:.63},
-        {...atPhoto(toX,toY,w,h,rotation+(lane-1)*52,.19),opacity:0}
-      ],assembleTime,align+lane*160,'cubic-bezier(.35,.04,.29,1)','forwards');
+      const [x,y,w,h,angle]=cardPoses[index];
+      const hero=index===stampIndex;
+      const start=380+index*Math.min(75,825/Math.max(1,cards.length-1));
+      const end=hero?3970:start+2470;
+      const direction=index%2?1:-1;
+      const spread=Math.min(11,index);
+      const frames=Array.from({length:25},(_,step)=>{
+        const progress=step/24;
+        const time=between(start,end,progress);
+        const t=ease(progress),arc=Math.sin(Math.PI*t);
+        const stampY=between(106,55.5,range(time,1250,3220))-7.7;
+        return {...atPhoto([
+          between(x,78.2,t)+arc*direction*(10+spread*.78),
+          between(y,stampY,t)-arc*(8.6+spread*.45),
+          between(w,8.1,t),
+          between(h,5.6,t),
+          between(angle,0,t)+arc*direction*19
+        ]),opacity:1-range(t,hero ? .966 : .84,1),offset:progress};
+      });
+      // Once they fly, the prints cross in front of the rising envelope.
+      card.style.zIndex=String(5+Number(getComputedStyle(card).zIndex||0));
+      run(card,frames,end-start,start,'linear','forwards');
     });
-
-    const film=add(bridge,'canvas','cut-film');
-    film.setAttribute('aria-hidden','true');
-    const filmMedia=cards.map(card=>card.firstElementChild).filter(Boolean);
-    if(fullBleed.firstElementChild)filmMedia.unshift(fullBleed.firstElementChild);
-    cleanups.push(drawContinuousFilm(film,filmMedia,{appear,spreadStart,spreadEnd,firstFlight,flightTime,gap}));
-
-    const flap=envelope.querySelector('.cut-envelope-flap');
-    run(envelope,[
-      {opacity:0,transform:'translateY(51%) rotate(-13deg) scale(.8)'},
-      {opacity:1,transform:'translateY(-3%) rotate(2deg)',offset:.76},
-      {opacity:1,transform:'none'}
-    ],820,firstFlight-550);
-    run(flap,[{transform:'rotateX(180deg)'},{transform:'rotateX(0)'}],610,flapTime,'cubic-bezier(.4,.05,.7,1)');
-    run(envelope,[
-      {transform:'none'},{transform:'translateY(3%) scale(1.04,.94)',offset:.29},{transform:'none'}
-    ],550,flapTime+535,'ease-out','forwards');
-    run(seal,[
-      {opacity:0,transform:'translate(-50%,-50%) scale(2.2) rotate(-15deg)'},
-      {opacity:1,transform:'translate(-50%,-50%) scale(.9)',offset:.63},
-      {opacity:1,transform:'translate(-50%,-50%)'}
-    ],490,flapTime+405,'cubic-bezier(.36,.18,.65,1)');
-    for(let index=0;index<22;index++){
-      const sparkle=add(bridge,'i','cut-seal-spark',index%5===0?'♥':'');
-      const angle=index*Math.PI/11;
-      const radius=index%2?29:48;
-      const endX=Math.cos(angle)*radius,endY=Math.sin(angle)*radius;
-      sparkle.style.color=index%3?'#ffb4c5':'#ffe0a3';
-      run(sparkle,[
-        {opacity:0,transform:'translate(-50%,-50%) scale(.18)'},
-        {opacity:1,transform:'translate(-50%,-50%) scale(1.45)',offset:.21},
-        {opacity:0,transform:'translate(calc(-50% + '+endX+'cqw),calc(-50% + '+endY+'cqw)) rotate('+index*23+'deg) scale(.55)'}
-      ],780,flapTime+630+(index%3)*40,'cubic-bezier(.13,.63,.43,1)');
-    }
-    const letterBackdrop=add(bridge,'div','letter-cover-background');
-    const portraitTime=flapTime+1150;
-    run(letterBackdrop,[{opacity:0},{opacity:1}],650,portraitTime);
-    run(envelope,[
-      {transform:'none'},{transform:'translateY(-42%) scale(1.42)'}
-    ],660,portraitTime,'cubic-bezier(.25,.67,.28,1)','forwards');
-    run(chapter,[
-      {opacity:0,transform:'translateY(11px)',color:'#6b384d',textShadow:'none'},
-      {opacity:1,transform:'none',color:'#6b384d',textShadow:'none'}
-    ],620,portraitTime+65);
-    run(layer,[{backgroundColor:'#65394d30'},{backgroundColor:'transparent'}],650,flapTime+560,'ease-out','forwards');
-    if(sampleBadge)run(sampleBadge,[{opacity:1},{opacity:0}],430,flapTime+560,'ease-out','forwards');
-    at(finish,portraitTime+750);
+    at(onToday,920);
+    at(finish,4820);
   }
-  const lastPrint=Math.max(firstPrint+Math.max(0,cards.length-1)*interval,180+Math.max(0,sparePrints.length-1)*125);
+
+  const readyAt=firstPrint+Math.max(0,cards.length-1)*interval+landing;
   at(()=>{
+    montage.inert=false;
     if(editButton)editButton.hidden=false;
     onCollageReady(moveIntoEnvelope);
-  },reduced?0:lastPrint+landing+230);
+  },reduced?0:readyAt);
 }
 
 const letterTyping=new WeakMap();
@@ -2906,13 +2746,9 @@ function playLetterCut(layer,items,variant,options={}){
   const cards=slides.map((item,index)=>{
     const level=layers?.[index];
     const label=(typeof item==='string'?'放大照片':'放大视频')+' '+(index+1);
-    const onOpen=openPhoto&&level!=='underlay'?card=>openPhoto(item,index,card):null;
+    const onOpen=openPhoto?card=>openPhoto(item,index,card):null;
     const card=print(montage,item,onOpen,label);
     if(level)card.dataset.layer=level;
-    if(level==='underlay'){
-      card.hidden=true;
-      card.setAttribute('aria-hidden','true');
-    }
     return card;
   });
   if(openPhoto){
@@ -2930,7 +2766,7 @@ function playLetterCut(layer,items,variant,options={}){
   const leave=reveal+600;
   const finished=leave+1740;
   if(variant==='film'){
-    arrangeFilmCut({layer,montage,bridge,sampleBadge,envelope,seal,chapter,today,opening,cards,slides,print,add,run,at,cleanups,onToday,onCollageReady,reduced,poses,editButton,backdrop,
+    arrangeFilmCut({layer,montage,bridge,sampleBadge,envelope,seal,chapter,today,opening,cards,slides,add,run,at,cleanups,onToday,onCollageReady,reduced,poses,editButton,backdrop,
       finish:()=>{stop();onDone()}
     });
     return stop;
@@ -3455,6 +3291,11 @@ function updateLetter(){
  letterDesk.hidden=!letterReady||(inRoom&&letterPage.hidden);
  root.dataset.letter=letterReady?'ready':stopLetterCut?'playing':'';
  if(!letterReady)setLetterOpen(letterDesk,envelope,letterPage,false);
+ else if(envelope.querySelector('.cut-postage').hidden){
+  const {items}=montageMedia();
+  const photo=montageEntries(items).findLast(entry=>typeof entry.item==='string');
+  setCoverPostage(envelope,photo?.item);
+ }
 }
 function resetLetter(){
  stopLetterCut?.();
@@ -3837,10 +3678,11 @@ function startLetterCut(){
  stopLetterCut=playLetterCut(letterCut,entries.map(entry=>entry.item),'film',{
   sample,backdrop,reduced:reduced.matches,poses:entries.map(entry=>entry.pose),layers:entries.map(entry=>entry.layer),
   openPhoto:(item,index,button)=>{
-   collagePreview={item,index,button,sample};
+   collagePreview={item,index,button,sample,scrollTop:window.scrollY};
    root.setAttribute('data-collage-preview','');
    letterCut.inert=true;
    openAlbum();
+   album.scrollIntoView({block:'start',inline:'nearest',behavior:'instant'});
   },
   finalScene:{home:letterDesk,cover:envelope,chapter:el('.letter-desk .cut-stamp')},
   onToday:showToday,
@@ -3951,7 +3793,7 @@ function updateCues(){
  if(camera)cameraCue.querySelector('span').textContent=current().photoEffect==='graduation'?'轻点画面，开始毕业合照':'轻点画面，拍下这张合照';
  stage.setAttribute('aria-label',camera?cameraCue.textContent:stageLabel);
  if(continueLetterCut){
-  el('.next-label').textContent='Next';
+  el('.next-label').textContent='下一步';
   nextButton.hidden=!album.hidden;
   holdCue.hidden=true;
   return;
@@ -4032,7 +3874,9 @@ function showPage(){
  }
  const remaining=gate?list.length-seenAlbumPhotos.size:0;
  const canContinue=gate&&!remaining;
- primary.textContent=canContinue?'下一步':'关闭';
+ primary.textContent=collagePreview?'×':canContinue?'下一步':'关闭';
+ if(collagePreview)primary.setAttribute('aria-label','关闭大图');
+ else primary.removeAttribute('aria-label');
  primary.toggleAttribute('data-next',canContinue);
  el('.swipe-tip').textContent=remaining?'左右滑动 · 还剩 '+remaining+' 张':'左右滑动';
  stack.dataset.single=String(list.length<2);
@@ -4115,14 +3959,17 @@ function openAlbum(){
  (albumGate()&&seenAlbumPhotos.size<urls().list.length?stack:el('.close-album')).focus({preventScroll:true});
 }
 function closeAlbum(focus=false){
- const returnTo=collagePreview?.button;
+ const returnTo=collagePreview?.button,returnScroll=collagePreview?.scrollTop;
  if(collagePreview){
   collagePreview=null;
   root.removeAttribute('data-collage-preview');
   letterCut.inert=letterCut.hidden;
  }
  stopVideo();album.hidden=true;root.dataset.album='closed';menu.disabled=false;updateCues();
- if(focus)(returnTo?.isConnected?returnTo:nextButton.hidden?stage:nextButton).focus({preventScroll:true});
+ if(focus){
+  (returnTo?.isConnected?returnTo:nextButton.hidden?stage:nextButton).focus({preventScroll:true});
+  if(returnScroll!==undefined)window.scrollTo({top:returnScroll,behavior:'instant'});
+ }
 }
 function update(){
  const s=current(),b=s.beats[beat];
@@ -4299,6 +4146,9 @@ el('.close-album').onclick=()=>{
  closeAlbum(true);save();weather();
 };
 album.onkeydown=e=>{
+ if(collagePreview&&e.key==='Escape'){
+  e.preventDefault();closeAlbum(true);weather();return;
+ }
  if(e.target!==video&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();turnPhoto(e.key==='ArrowRight'?1:-1)}
 };
 el('input').onchange=e=>{
