@@ -1,5 +1,5 @@
 (() => {
-  // Only the photos and videos used in the story are included in this archive.
+  // The original paths also identify cards in the saved collage layout.
   const albumPaths = {
   "everyday": [
     {
@@ -65,6 +65,14 @@
       offset = end;
     }
 
+    const letterBytes = records.get('letter.json');
+    const letter = letterBytes ? JSON.parse(decoder.decode(letterBytes)) : null;
+    if (letterBytes && (!letter || typeof letter.greeting !== 'string' || !letter.greeting.trim() ||
+      !Array.isArray(letter.paragraphs) || !letter.paragraphs.length ||
+      letter.paragraphs.some(paragraph => typeof paragraph !== 'string' || !paragraph.trim()))) {
+      throw new Error('Invalid letter content');
+    }
+
     const byPath = new Map();
     const used = Object.values(albumPaths).flat().map(item => typeof item === 'string' ? item : item.src);
     if (used.some(path => !records.get(path)?.length)) throw new Error('Incomplete media archive');
@@ -72,7 +80,7 @@
       const type = path.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'image/jpeg';
       byPath.set(path, URL.createObjectURL(new Blob([records.get(path)], { type })));
     }
-    return byPath;
+    return { sources: byPath, letter };
   }
 
   window.loadWalkMedia = async (url) => {
@@ -80,10 +88,11 @@
     const timeout = setTimeout(() => controller.abort(), 30000);
     try {
       const response = await fetch(url, { signal: controller.signal, cache: 'no-store' });
-      if (!response.ok) throw new Error('Unable to load photos (' + response.status + ')');
-      const sources = readArchive(await response.arrayBuffer());
+      if (!response.ok) throw new Error('Unable to load story content (' + response.status + ')');
+      const { sources, letter } = readArchive(await response.arrayBuffer());
       window.walkAlbums = albumPaths;
       window.walkMediaSources = sources;
+      return letter;
     } finally {
       clearTimeout(timeout);
     }

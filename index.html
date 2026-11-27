@@ -77,7 +77,7 @@
     <section class="letter-desk full-letter-desk" hidden>
       <header class="cut-stamp"><small>第三篇</small><h2>给你的一封信</h2></header>
       <button class="cut-envelope" data-film-cover type="button" aria-label="打开写给你的信" aria-expanded="false"><i class="cut-envelope-flap" aria-hidden="true"></i><span aria-hidden="true">♥</span><b>给你：</b></button>
-      <article class="letter-page letter-readout" hidden aria-label="给你的一封信"><div class="letter-sheet"><h3>给你的一封信</h3><div class="letter-body"><p>完整的信收在私人相册里。</p><a class="private-album-link" href="https://drive.google.com/file/d/1gm0OLeab8jpmPBTOJuQZntOITSt3tfR8/view?usp=sharing" target="_blank" rel="noopener noreferrer">打开私人相册</a></div><button type="button" class="fold-letter">收起信纸</button></div></article>
+      <article class="letter-page letter-readout" hidden aria-label="给你的一封信"><div class="letter-sheet"><h3>给你的一封信</h3><div class="letter-body"><p>这封信暂时打不开。</p></div><button type="button" class="fold-letter">收起信纸</button></div></article>
     </section>
     <section class="voice-room" hidden aria-labelledby="voice-room-title">
       <canvas class="shore-canvas" width="300" height="533" aria-hidden="true"></canvas>
@@ -804,11 +804,6 @@
  line-height:1.2;font-weight:650;pointer-events:none;
 }
 #our-walk .montage-editor button:focus-visible{outline:2px solid #ffe58e;outline-offset:-2px}
-#our-walk .private-album-link{
-  display:inline-flex;align-items:center;min-height:44px;margin-top:10px;padding:4px 11px;
-  color:#63364d;background:#f8ded6;border:1px solid #c78796;border-radius:4px;
-  font-size:14px;font-weight:650;text-decoration:underline;text-underline-offset:3px;
-}
 #our-walk .voice-room{
   position:absolute;inset:0;z-index:3;isolation:isolate;overflow:hidden;
   touch-action:pan-y;container-type:inline-size;color:#fff1d7;
@@ -964,7 +959,7 @@
 #our-walk[data-room-transition] .letter-desk{background:transparent}
 #our-walk .world:has(>.voice-room:not([hidden])){touch-action:pan-y}
 </style>
-<script src="walk-media.js"></script>
+<script src="walk-media.js?v=letter"></script>
 <script>
 (()=>{
  const gate=document.getElementById('walk-date-gate');
@@ -973,7 +968,7 @@
  const form=gate.querySelector('form');
  const feedback=gate.querySelector('#walk-date-feedback');
  const enterButton=form.querySelector('button');
- const mediaArchiveUrl='https://ehdouncjmwktavnmueqa.supabase.co/storage/v1/object/public/memory-walk-media/memories-47a187aa59944bce980c004d1345c8ac.zip';
+ const mediaArchiveUrl='https://ehdouncjmwktavnmueqa.supabase.co/storage/v1/object/public/memory-walk-media/story-efe2920db4844ca896057fbb247ebe40.zip';
  let started=false;
  let loading=false;
  let dateVerified=false;
@@ -985,11 +980,21 @@
    enterButton.disabled=true;
    for(const field of form.querySelectorAll('select'))field.disabled=true;
    skipButton.hidden=true;
-   feedback.textContent='正在载入照片和视频…';
+   feedback.textContent='正在载入回忆…';
    try{
-    await window.loadWalkMedia(mediaArchiveUrl);
+    const letter=await window.loadWalkMedia(mediaArchiveUrl);
+    if(letter){
+     const body=story.querySelector('.letter-body');
+     const paragraph=text=>{
+      const element=document.createElement('p');
+      element.textContent=text;
+      return element;
+     };
+     body.before(paragraph(letter.greeting));
+     body.replaceChildren(...letter.paragraphs.map(paragraph));
+    }
    }catch{
-    feedback.textContent='暂时载入不了照片和视频。';
+    feedback.textContent='暂时载入不了照片、视频和信。';
     enterButton.disabled=false;
     enterButton.textContent='重试';
     skipButton.hidden=false;
